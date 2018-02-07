@@ -1,0 +1,1 @@
+$('ul:first').hide();
