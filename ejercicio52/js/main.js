@@ -1,12 +1,19 @@
 $(document).ready(function () {
-   let lista = $("<ul></ul>");
+   let lista = [];
    let itemLista = [];
+   let itemLista2 = [];
    let arrayCiudades = ["Andújar", "Linares", "Bailén", "Jaén", "La Carolina"];
-   $("body").append(lista);
-   for(let i=0; i<arrayCiudades.length;i++){
-       itemLista[i] = $("<li>"+arrayCiudades[i]+"</li>");
+
+   for(let i=0;i<2;i++){
+	   lista[i] = $("<ul id='"+i+"'></ul>");
    }
-   lista.append(itemLista);
+	$("body").append(lista);
+   for(let j=0; j<arrayCiudades.length;j++){
+       itemLista[j] = $("<li>"+arrayCiudades[j]+"</li>");
+       itemLista2[j] = $("<li>"+arrayCiudades[j]+"</li>");
+   }
+	lista[0].append(itemLista);
+	lista[1].append(itemLista2);
     $("li:eq(1)").css({
        "background-color": "red"
     });

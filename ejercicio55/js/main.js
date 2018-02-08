@@ -4,7 +4,7 @@
 
  */
 $(document).ready(function () {
-    let numerosDeDiv =  2
+    let numerosDeDiv =  2;
     let crearDiv = [];
     let nombres = [];
     let botonParar = $("<button>Cambiar color animacion</button>");
@@ -17,18 +17,19 @@ $(document).ready(function () {
 
 
 
-    let auto = (() =>{
-        $("div:eq(0)").css({
-            "background-color": "blue"
-        }).animate({width: "50%"}, 2000);
-        $("div:eq(0)").css({
-            "background-color": "blue"
-        }).animate({width: "100%"}, 2000);
-    })();
+    let auto = () =>{
+		$("div:eq(0)").css({
+			"background-color": "blue"
+		}).animate({width: "50%"}, 2000).animate({width: "100%"}, 2000);
+		$("div:eq(1)").css({
+			"background-color": "green"
+		}).animate({width: "30%"}, 2000).animate({width: "100%"}, 2000);
+    };
+    setInterval(auto, 3000);
 
-    $("div:eq(1)").css({
-        "background-color": "green"
-    });
+
+
+
     $("button").click(function () {
        $(":animated").css({
           "background-color": "yellow"
