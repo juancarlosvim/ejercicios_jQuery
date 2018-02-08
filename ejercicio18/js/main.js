@@ -1,16 +1,16 @@
 $(function () {
-    $("p").hide();
+
 
     $("input").first().click(function () {
-       $("div:first>p").fadeIn();
+       $("div:first>p").fadeOut();
 
     });
     $("input:eq(1)").click(function () {
-        $("div:eq(1)>p").fadeIn("slow");
+        $("div:eq(1)>p").fadeOut("slow");
 
     });
     $("input").last().click(function () {
-        $("div:last>p").fadeIn(3000);
+        $("div:last>p").fadeOut(3000);
 
     });
 
