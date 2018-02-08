@@ -25,11 +25,7 @@ $(document).ready(function () {
 			"background-color": "green"
 		}).animate({width: "30%"}, 2000).animate({width: "100%"}, 2000);
     };
-    setInterval(auto, 3000);
-
-
-
-
+    setInterval(auto, true);
     $("button").click(function () {
        $(":animated").css({
           "background-color": "yellow"
