@@ -1,5 +1,6 @@
 $(document).ready(function () {
 	let parametros = {};
+
 	$.ajax({
 		data: parametros,
 		url: "http://daw2.iesoretania.es/alumno04/bdRecursos/bdprovincias.php",
@@ -17,18 +18,27 @@ $(document).ready(function () {
 	let mostrarProvincias = (d) =>{
 		let contenido = d;
 		let provincias = [];
-		let select = $("<select id='provincias' name='provincias'></select>")
+		let select = $("<select id='provincias' name='provincias'></select>");
 		for(let i=0;i<contenido.length;i++){
 			provincias[i] = $("<option value='"+contenido[i].id_provincia+"'>"+contenido[i].provincia+"</option>");
 		}
 		select.append(provincias);
 		$("body").append(select);
-		//$("[name=provincias]").selectmenu();
-		select.change(function (e) {
+		$("[name=provincias]").selectmenu({
+			change: function (event, data) {
+				console.log(event);
+				console.log(data);
+				let valorProvincia = data.item.value;
+				console.log(valorProvincia);
+				pasarMunicipios(valorProvincia);
+
+			}
+		});
+		/*select.change(function (e) {
 			let valorSelect = e.target.value;
 			console.log(e.target.value);
 			pasarMunicipios(valorSelect);
-		});
+		});*/
 	};
 
 	let pasarMunicipios = (v) =>{
@@ -51,13 +61,18 @@ $(document).ready(function () {
 	let mostrarMunicipios = (m) =>{
 		let contenidoMunicipio = m;
 		let municipios = [];
-		let selectMu = $("<select id='municipio' name='municipios'></select>")
 		for(let i=0;i<contenidoMunicipio.length;i++){
 			municipios[i] = $("<option value='"+contenidoMunicipio[i].id_municipio+"'>"+contenidoMunicipio[i].nombre+"</option>");
 		}
-		selectMu.append(municipios);
+		let selectMu = $("<select id='municipio' name='municipios'></select>");
 		$("body").append(selectMu);
-		//$("[name=municipios]").selectmenu();
+		console.log($("select").length);
+		//para eliminar los select que crea uno nuevo en el append
+		if($("select").length===3){
+			$("select:eq(1)").remove();
+		}
+		selectMu.append(municipios);
+		$("[name=municipios]").selectmenu();
 		selectMu.change(function (e) {
 			console.log(e.target.value);
 		});
