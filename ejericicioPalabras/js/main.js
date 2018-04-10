@@ -170,8 +170,7 @@ $(document).ready(function () {
 			posicion[i] = comprobarPalabra(palabras[i]);
 			console.log(posicion);
 			if(posicion[i]!==palabras[i]){
-				 posicion[i] =
-
+				// falta por scar la posicon de las palabras
 			}
 		}
 		console.log("p "+p);
