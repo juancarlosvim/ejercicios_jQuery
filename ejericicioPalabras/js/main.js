@@ -3,6 +3,7 @@ $(document).ready(function () {
 	let btnColor = $("<button id='btnColor'>Cambiar Color</button>");
 	let btnComprobar = $("<button id='btnComprobar'> Comprobar</button>");
 	let btnTildes = $("<button id='btnTilde'>Quitar Tilde</button>");
+	let debug = true; // para mostrar en consola algunos datos
 	$("body").append(lista, btnColor, btnComprobar, btnTildes);
 	$.ajax({
 		url: "http://daw2.iesoretania.es/alumno09/horoscopo/palabras.php",
@@ -10,10 +11,14 @@ $(document).ready(function () {
 		data: null,
 		statusCode: {
 			200: function () {
-				console.log("Connexión Correcta");
+                if(debug){
+                    console.log("Connexión Correcta");
+                }
 			},
 			404: function () {
-				console.log("Conexión incorrecta");
+                if(debug){
+                    console.log("Conexión incorrecta");
+                }
 			}
 
 		}
@@ -26,13 +31,18 @@ $(document).ready(function () {
 	// creamos una funcion que recibe un parametro que es el contenido de la llamada de ajax
 	let seperarLetras = (c) =>{
 		let contenido = c.toLowerCase();
-		console.log("datos => "+contenido);
+        if(debug){
+            console.log("datos => "+contenido);
+        }
 		let arrayPalabras = [];
 		let tam = 9;
 		for(let i=0;i<tam;i++){
 			arrayPalabras[i] = contenido.split("-")[i];
 		}
-		console.log(arrayPalabras);
+		if(debug){
+            console.log(arrayPalabras);
+		}
+
 		crearLista(arrayPalabras);
 
 	};
@@ -48,18 +58,19 @@ $(document).ready(function () {
 		lista.append(contenidoLista);
 		btnComprobar.click(function () {
 			let orden = comprobarListaOrdenada(arrayPalabras);
-			console.log("orden => "+orden);
+            if(debug){
+                console.log("orden => "+orden);
+            }
 			if(orden===true){
 				alert("Array ordenado");
 			}else{
 				alert("Array no ordenado");
 			}
 		});
-		console.log(contenidoLista);
+		if(debug){
+            console.log(contenidoLista);
+		}
 
-		//arrayElementos(contenidoLista);
-
-		//console.log(arrayElementos(contenidoLista));
 	};
 
 	btnColor.click(function () {
@@ -80,26 +91,25 @@ $(document).ready(function () {
 		for(let i=0;i<l.length;i++){
 			arrayContenidoLi[i] = $("li:eq("+i+")").text();
 		}
-		console.log(arrayContenidoLi);
-
+		if(debug){
+            console.log(arrayContenidoLi);
+		}
 		let arrayOrdenado = [];
 		arrayOrdenado = l.sort();
 		let ordenado;
 		for(let i=0;i<1;i++){
 			if(arrayContenidoLi[i] === arrayOrdenado[i]){
 				 ordenado = true;
-				console.log("ARRAY ORDENADO");
+				 if(debug){
+                     console.log("ARRAY ORDENADO");
+				 }
+
 			}else{
 				 ordenado = false
 			}
 		}
 		return ordenado;
 	};
-	/*
-		TODO
-		Realizado que las palabras que lleven tilde, se las quito y me las devuelve en un array
-		Falta por realizar que cuando pulse en el boton esas palabras se sustituyan por las de sin tilde
-	 */
 
 	let comprobarPalabra = (p) =>{
 		let arrayPalabrasAcentuadas = ["á", "Á", "é", "É", "í", "Í", "ó", "Ó", "ú", "Ú"];
@@ -114,14 +124,15 @@ $(document).ready(function () {
 		return palabra;
 	};
 	let arrayElementos = (elemnt) =>{
-		console.log("entro en la funcion arrayElementos");
+        if(debug){
+            console.log("entro en la funcion arrayElementos");
+        }
 		let cont = elemnt;
 		let array = [];
 		let palabras =[];
-		let tamLi = $("li").length;
-		//console.log(comprobarPalabra(cont[0].text()));
-		console.log(cont);
-
+        if(debug){
+            console.log(cont);
+        }
 		for(let i=0;i<cont.length;i++){
 			array[i] = comprobarPalabra(cont[i]);
 			//console.log(array[i]);
@@ -129,33 +140,41 @@ $(document).ready(function () {
 				palabras.push(array[i]);
 			}
 		}
-		//console.log(palabras);
-		//console.log(palabras);
-		//comprobar ul y li
 
 		if(palabras.length>0){
-			console.log(palabras);
+            if(debug){
+                console.log("palabras");
+                console.log(palabras);
+                console.log("fin palabras");
+            }
 			return palabras;
 		}
 
-		//return palabras;
+
 	};
 	btnTildes.click(function () {
 		let tamLi = $("li").length;
 		let contenido = [];
+        let palabrasSinTilde  =[];
+        let posicionesPalabrasConTilde = [];
 		for(let i=0;i<tamLi;i++){
 			contenido[i] = $("li:eq("+i+")").text();
 		}
-		let palabrasSinTilde = arrayElementos(contenido);
-		console.log(contenido);
-		console.log(arrayElementos(contenido));
+        palabrasSinTilde = arrayElementos(contenido); // me quedo con las palabras que no tienen tilde
+        if(debug){
+            console.log(contenido);
+            console.log(arrayElementos(contenido));
+        }
+        posicionesPalabrasConTilde = posicionDePalabra(contenido);
+        if(debug){
+            console.log("posiciones");
+            console.log(posicionesPalabrasConTilde);
+            console.log(" fin posiciones");
+        }
 		posicionDePalabra(contenido);
 		for(let j=0;j<contenido.length;j++){
-			//reempazarPalabra(palabrasSinTilde[j], );
+			reempazarPalabra(palabrasSinTilde[j], posicionesPalabrasConTilde[j]);
 		}
-
-
-
 	});
 	/*
 		Funcion para saber la posicion que tiene las palabras acentuadas
@@ -164,18 +183,31 @@ $(document).ready(function () {
 	let posicionDePalabra = (c) =>{
 		let palabras = c;
 		let posicion = [];
-		let p;
-		console.log(palabras);
+		let posicionPalabra = [];
+		let numerosArray = [];
+        if(debug) {
+            console.log(palabras);
+        }
 		for(let i=0;i<palabras.length;i++){
 			posicion[i] = comprobarPalabra(palabras[i]);
-			console.log(posicion);
+            if(debug){
+                console.log(posicion);
+            }
 			if(posicion[i]!==palabras[i]){
+				if(posicion[i] !== undefined){
+                    posicionPalabra[i] = posicion.indexOf(posicion[i]);
+                    //solucion a los empty slots
+					numerosArray.push(posicionPalabra[i]);
+				}
 				// falta por scar la posicon de las palabras
 			}
 		}
-		console.log("p "+p);
-		//console.log("pos "+posicion);
-		return posicion;
+        if(debug){
+            console.log(posicionPalabra);
+            console.log(numerosArray);
+        }
+
+		return numerosArray;
 	};
 	let reempazarPalabra = (palabra, posicion) =>{
 		let tam = $("li").length;
