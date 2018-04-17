@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(document).ready(()=> {
 	let lista = $("<ul></ul>");
 	let btnColor = $("<button id='btnColor'>Cambiar Color</button>");
 	let btnComprobar = $("<button id='btnComprobar'> Comprobar</button>");
@@ -25,8 +25,10 @@ $(document).ready(function () {
 	}).done(function (data) {
 		//console.log(data);
 		//llamo a la funcion separarLetras
-		seperarLetras(data);
-
+		let palabrasGeneradas = seperarLetras(data);
+		let palabrasOrdenadas = palabrasGeneradas.sort();
+        crearLista(palabrasOrdenadas);
+        comprobarListaOrdenada(palabrasOrdenadas);
 	});
 	// creamos una funcion que recibe un parametro que es el contenido de la llamada de ajax
 	let seperarLetras = (c) =>{
@@ -35,46 +37,42 @@ $(document).ready(function () {
             console.log("datos => "+contenido);
         }
 		let arrayPalabras = [];
-		let tam = 9;
-		for(let i=0;i<tam;i++){
-			arrayPalabras[i] = contenido.split("-")[i];
-		}
+		arrayPalabras = contenido.split("-");
 		if(debug){
             console.log(arrayPalabras);
 		}
-
-		crearLista(arrayPalabras);
-
+		return arrayPalabras;
 	};
 	// funcion que recibe un parametro en este caso un array y creamos los li y añadimos a la lista los li
 	let crearLista = (a) =>{
-		let tamTotal = a.length;
-		let arrayPalabras = a.sort(); // si quitamos el sort nos dira que no esta ordenado
+		let arrayPalabras = a;
 		let contenidoLista = [];
-		for(let i=0;i<tamTotal;i++){
-			contenidoLista[i] = $("<li>"+arrayPalabras[i]+"</li>");
-		}
-
-		lista.append(contenidoLista);
-		btnComprobar.click(function () {
-			let orden = comprobarListaOrdenada(arrayPalabras);
-            if(debug){
-                console.log("orden => "+orden);
-            }
-			if(orden===true){
-				alert("Array ordenado");
-			}else{
-				alert("Array no ordenado");
+		/*
+		$.each([ 52, 97 ], function( index, value ) {
+  			alert( index + ": " + value );
+		});
+		 */
+		$.each(arrayPalabras, (index, value)=>{
+			contenidoLista[index] = $(`<li>${value}</li>`);
+			if(debug){
+                //console.log(`index${index} valor ${value}`);
 			}
 		});
-		if(debug){
-            console.log(contenidoLista);
-		}
-
+		lista.append(contenidoLista);
 	};
+    btnComprobar.click(() => {
+        let orden = comprobarListaOrdenada();
+        if(debug){
+            console.log("orden => "+orden);
+        }
+        if(orden===true){
+            alert("Array ordenado");
+        }else{
+            alert("Array no ordenado");
+        }
+    });
 
-	btnColor.click(function () {
-
+	btnColor.click(()=> {
 		$("li:even").css({
 			"background-color": "yellow"
 		});
@@ -83,9 +81,12 @@ $(document).ready(function () {
 		});
 	});
 
-	// funcion que le pasamos el array
+	/*
+		funcion para comprobar que la lista está ordeanada
+		TODO
+		* comprobar el array de forma eficiente
+	 */
 	let comprobarListaOrdenada =  (l) =>{
-
 		// cogemos los li
 		let arrayContenidoLi = [];
 		for(let i=0;i<l.length;i++){
@@ -94,21 +95,19 @@ $(document).ready(function () {
 		if(debug){
             console.log(arrayContenidoLi);
 		}
-		let arrayOrdenado = [];
-		arrayOrdenado = l.sort();
-		let ordenado;
-		for(let i=0;i<1;i++){
-			if(arrayContenidoLi[i] === arrayOrdenado[i]){
-				 ordenado = true;
-				 if(debug){
-                     console.log("ARRAY ORDENADO");
-				 }
-
-			}else{
-				 ordenado = false
+		let arrayOrdenado = l;
+		let ordenado = false;
+		if(debug){
+			console.log(`arrayContenidoLi ${arrayContenidoLi}`);
+			console.log(`arrayOrdenado ${arrayOrdenado}`);
+		}
+		for(let i=0;i<l.length;i++){
+			console.log(`i ${arrayOrdenado[i]}`);
+			if(arrayOrdenado[i]<arrayContenidoLi[i]){
+				ordenado = true;
 			}
 		}
-		return ordenado;
+		return console.log(ordenado);
 	};
 
 	let comprobarPalabra = (p) =>{
@@ -140,7 +139,6 @@ $(document).ready(function () {
 				palabras.push(array[i]);
 			}
 		}
-
 		if(palabras.length>0){
             if(debug){
                 console.log("palabras");
@@ -149,8 +147,6 @@ $(document).ready(function () {
             }
 			return palabras;
 		}
-
-
 	};
 	btnTildes.click(function () {
 		let tamLi = $("li").length;
@@ -206,7 +202,6 @@ $(document).ready(function () {
             console.log(posicionPalabra);
             console.log(numerosArray);
         }
-
 		return numerosArray;
 	};
 	let reempazarPalabra = (palabra, posicion) =>{
