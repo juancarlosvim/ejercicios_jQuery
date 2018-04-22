@@ -3,8 +3,9 @@ $(document).ready(()=> {
 	let btnColor = $("<button id='btnColor'>Cambiar Color</button>");
 	let btnComprobar = $("<button id='btnComprobar'> Comprobar</button>");
 	let btnTildes = $("<button id='btnTilde'>Quitar Tilde</button>");
+	let btnOrdenar = $("<button id='btnOrdenar'>Ordenar Palabras</button>");
 	let debug = true; // para mostrar en consola algunos datos
-	$("body").append(lista, btnColor, btnComprobar, btnTildes);
+	$("body").append(lista, btnColor, btnComprobar, btnTildes, btnOrdenar);
 	$.ajax({
 		url: "http://daw2.iesoretania.es/alumno09/horoscopo/palabras.php",
 		method: "POST",
@@ -26,9 +27,25 @@ $(document).ready(()=> {
 		//console.log(data);
 		//llamo a la funcion separarLetras
 		let palabrasGeneradas = seperarLetras(data);
-		let palabrasOrdenadas = palabrasGeneradas.sort();
-        crearLista(palabrasOrdenadas);
-        comprobarListaOrdenada(palabrasOrdenadas);
+
+        crearLista(palabrasGeneradas);
+        btnColor.click(()=>{
+            cambiarColor();
+        });
+        btnOrdenar.click(()=>{
+            ordenarPalabras(palabrasGeneradas)
+        });
+        btnComprobar.click(() => {
+            let orden = comprobarListaOrdenada(palabrasGeneradas);
+            if(debug){
+                console.log("orden => "+orden);
+            }
+            if(orden===true){
+                alert("Array ordenado");
+            }else{
+                alert("Array no ordenado");
+            }
+        });
 	});
 	// creamos una funcion que recibe un parametro que es el contenido de la llamada de ajax
 	let seperarLetras = (c) =>{
@@ -60,32 +77,35 @@ $(document).ready(()=> {
 		});
 		lista.append(contenidoLista);
 	};
-    btnComprobar.click(() => {
-        let orden = comprobarListaOrdenada();
-        if(debug){
-            console.log("orden => "+orden);
-        }
-        if(orden===true){
-            alert("Array ordenado");
-        }else{
-            alert("Array no ordenado");
-        }
-    });
-
-	btnColor.click(()=> {
-		$("li:even").css({
-			"background-color": "yellow"
-		});
-		$("li:odd").css({
-			"background-color": "red"
-		});
-	});
-
+	let cambiarColor = () =>{
+        $("li:even").css({
+            "background-color": "yellow"
+        });
+        $("li:odd").css({
+            "background-color": "red"
+        });
+    };
 	/*
-		funcion para comprobar que la lista está ordeanada
-		TODO
-		* comprobar el array de forma eficiente
+	    funcion que le pasamos un parametro y realiza lo siguiente, con las palabras generadas
+	    cambia los li y los ordena en pantalla.
 	 */
+	let ordenarPalabras = (t) =>{
+       let arrayPalabrasOrdenadas = t.sort();
+       let tamLi = $("li").length;
+       for(let i=0;i<tamLi;i++){
+           $("li:eq("+i+")").text(""+arrayPalabrasOrdenadas[i]);
+       }
+       if(debug){
+           console.log(`array${arrayPalabrasOrdenadas}`);
+       }
+
+    };
+    /*
+        Funcion que le pasamos un parametro, en este caso será el array de las palabras generas
+        lo que realiza la siguiente funcion coger los elementos del li, y mterelos en un array
+        con las palabras generedas que le hemos pasado lo ordenamos con el sort() y ahi comprobamos si los dos array son iguales
+        si no son devuelve false, y si son true
+     */
 	let comprobarListaOrdenada =  (l) =>{
 		// cogemos los li
 		let arrayContenidoLi = [];
@@ -95,19 +115,24 @@ $(document).ready(()=> {
 		if(debug){
             console.log(arrayContenidoLi);
 		}
-		let arrayOrdenado = l;
+		let arrayOrdenado = l.sort();
 		let ordenado = false;
 		if(debug){
+		    console.log(`l ${l}`);
 			console.log(`arrayContenidoLi ${arrayContenidoLi}`);
 			console.log(`arrayOrdenado ${arrayOrdenado}`);
 		}
+		/*
+			Comprobar el ordenado
+		 */
 		for(let i=0;i<l.length;i++){
 			console.log(`i ${arrayOrdenado[i]}`);
-			if(arrayOrdenado[i]<arrayContenidoLi[i]){
+			if(arrayOrdenado[i]===arrayContenidoLi[i]){
 				ordenado = true;
+
 			}
 		}
-		return console.log(ordenado);
+		return ordenado;
 	};
 
 	let comprobarPalabra = (p) =>{
